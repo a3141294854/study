@@ -1,5 +1,15 @@
 # HTTP
 
+本地传输找mac（物理地址）
+
+网络传说找ip
+
+送到哪个软件找端口
+
+
+
+先通过ip地址判断是否在同一个子网，不是就发给默认网关，就是路由器，是就是通过交换机找mac地址
+
 客户端发送请求，服务器返回响应
 
 ## 常用方法
@@ -55,7 +65,7 @@ User-Agent: Mozilla/5.0...
 | **4xx** | **客户端错误** | 请求有语法错误或无法实现。       |
 | **5xx** | **服务器错误** | 服务器处理请求时发生错误         |
 
-2相应头：包含关于响应的元信息
+2响应头：包含关于响应的元信息
 
 3响应体：返回的信息，图片，代码等
 
@@ -120,6 +130,10 @@ Server: nginx
   - `application/json`: `{"username": "john", "age": 20}`
   - `application/x-www-form-urlencoded`: `username=john&age=20`
   - `multipart/form-data`: 用于上传文件
+
+
+
+
 
 
 
