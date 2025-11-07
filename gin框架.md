@@ -4,7 +4,7 @@
 
 ```go
 r := gin.Default()
-//自动中间件
+//自动中间件，包含一个自动日志，一个
 r.GET("/ping",fun)
 //gin包用 *gin.Context封装了响应和请求的信息
 r.Run("0.0.0.0:8080")
@@ -254,14 +254,16 @@ c.Abort()
 用于检测是否是同一个客户端
 
 ```go
-r.GET("cookie", func(c *gin.Context) {
+r.GET("/cookie", func(c *gin.Context) {
       // 获取客户端是否携带cookie
       cookie, err := c.Cookie("key_cookie")
       if err != nil {
          cookie = "NotSet"
+         //cookie的名字
+         //它的值
          // 给客户端设置cookie
-         //  maxAge int, 单位为秒
-         // path,cookie所在目录
+         //  maxAge int, 单位为秒，存活的时间
+         // path,cookie所在目录，就是访问什么的时候会发送这个cookie
          // domain string,域名
          //   secure 是否智能通过https访问
          // httpOnly bool  是否允许别人通过js获取自己的cookie
@@ -271,11 +273,72 @@ r.GET("cookie", func(c *gin.Context) {
       fmt.Printf("cookie的值是： %s\n", cookie)
    })
    r.Run(":8000")
+
+
+
+
+//如果这样写的话，可以实现闭包，初始化参数，方便配置，最常用的
+//在进行一次初始化后，每次直接调用作用函数
+func AuthMiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 获取客户端cookie并校验
+		if cookie, err := c.Cookie("abc"); err == nil {
+			if cookie == "123" {
+				c.Next()
+				return
+			}
+		}
+		// 返回错误
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "err"})
+		// 若验证不通过，不再调用后续的函数处理
+		c.Abort()
+		return
+	}
+}
 ```
 
+## Session
+
+主要面向服务器，c.set()的高级版本，可以在被多个请求使用
+
+```go
+//注册一个引擎，填写加密密钥
+//必须是 16、24 或 32 字节的长度（对应 AES-128、AES-192、AES-256）
+store := cookie.NewStore([]byte("secret-key"))
+//为所有请求配置中间件，就是应用到所有，自己顶定义一个session名字，加上引擎
+c.Use(sessions.Sessions("mysession", store))
+//在工作函数中获取sessions，第一个默认的
+func (c *gin.context){
+    session := sessions.Default(c)
+    //获取指定名称的sessions
+    sessions.DefaultMany(c, "名称")
+}
+
+//写入，保存，获取
+session.Set("key", "value")
+session.Save()
+session.Get("key")
+
+//删除单个,所有的记得保存
+session.Delete()
+//清空所有的
+session.Clear()
+
+//设置session过期时间
+session.Options(sessions.Options{
+    MaxAge: 3600, // 3600秒 = 1小时后过期
+    // 会话期有效（浏览器关闭就失效）
+    MaxAge: 0
+})
 
 
 ```
 
+## 日志记录
+
+```go
+f, _ := os.Create("gin.log")//创建文件
+gin.DefaultWriter = io.MultiWriter(f, os.Stdout)//gin框架的日志输出
+log.SetOutput(f)//log包的日志输出
 ```
 
