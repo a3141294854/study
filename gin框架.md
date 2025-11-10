@@ -155,17 +155,17 @@ c.Status(http.StatusOK)           // 200 OK
 c.Status(http.StatusCreated)      // 201 Created
 c.Status(http.StatusNoContent)    // 204 No Content
 // 重定向类
-c.Status(http.StatusMovedPermanently)  // 301
-c.Status(http.StatusFound)             // 302
-c.Status(http.StatusSeeOther)          // 303
+c.Status(http.StatusMovedPermanently)  // 301永久重定向，保持原方法
+c.Status(http.StatusFound)             // 302临时重新定向，保持元方法
+c.Status(http.StatusSeeOther)          // 303同上，改为get，常用与对post的重定向
 // 客户端错误类
 c.Status(http.StatusBadRequest)        // 400
 c.Status(http.StatusUnauthorized)      // 401
 c.Status(http.StatusForbidden)         // 403
 c.Status(http.StatusNotFound)          // 404
 // 服务器错误类
-c.Status(http.StatusInternalServerError) // 500
-c.Status(http.StatusServiceUnavailable) // 503
+c.Status(http.StatusInternalServerError) // 500执行错误
+c.Status(http.StatusServiceUnavailable) // 503服务暂不可用
 
 // 设置Content-Type
 c.Header("Content-Type", "application/json; charset=utf-8")
@@ -247,6 +247,8 @@ c.Next()
 //程序运行到这里时，执行下一个中间件和响应程序，最后来执行，如果有多个，从最后推到最前，用来记录时间等
 c.Abort()
 //直接停止整个响应链条，要跟return一起连用
+c.Redirect(http.StatusFound, "/login")
+//重新定向到指定网址，要绝对路径
 ```
 
 ## COOKIE
