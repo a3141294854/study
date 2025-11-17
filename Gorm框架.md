@@ -5,13 +5,11 @@
 ## 启动数据库
 
 ```go
-db, err := gorm.Open("mysql", "root:root@(127.0.0.1:3306)/db1?charset=utf8mb4&parseTime=True&loc=Local") 
-//数据库名称 + 账号名称 + 账号密码 + 地址（本机默认的是上面） + 库的名称 +其它要求
-//?charset=utf8mb4&parseTime=True&loc=Local
-    if err!= nil{
-        panic(err)
-    }
-    defer db.Close()
+dsn := "root:@furenjie321@tcp(127.0.0.1:3306)/study?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
 ```
 
 ## 创建表
@@ -119,3 +117,20 @@ if err != nil {
 }
 ```
 
+## 其它
+
+```go
+db.Model(&models.Luggage{})
+//用于指定对哪个表进行操作
+
+```
+
+```go
+//自动管理，创建时间，更新时间，软删除  Unscoped()查询软删除
+
+CreatedAt time.Time
+UpdatedAt time.Time
+DeletedAt gorm.DeletedAt `gorm:"index"`
+
+//为时间字段添加 json:"-" 标签，这样在序列化为 JSON 时会忽略这些字段
+```

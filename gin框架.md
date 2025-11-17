@@ -50,6 +50,7 @@ c.String(http.StatusOK, name+" is "+action)  // 返回响应
 
 ```go
 name := c.DefaultQuery("name", "枯藤")
+name := c.Query("name")
 // 查询的参数 + 不存在时返回的默认值
 c.String(http.StatusOK, fmt.Sprintf("hello %s", name))
 ```
