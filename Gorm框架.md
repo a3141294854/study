@@ -134,3 +134,24 @@ DeletedAt gorm.DeletedAt `gorm:"index"`
 
 //为时间字段添加 json:"-" 标签，这样在序列化为 JSON 时会忽略这些字段
 ```
+
+## 关联查询
+
+用preload就是查询的结果中，有个结构体，这个结构体包含着另一个表的信息
+
+用join就是手动选择条件
+
+```go
+1绑定外键
+Guest Guest `gorm:"foreignKey:GuestID"`
+2确实关联查询
+Preload("Guest")
+//差不多就是join
+//join
+Joins("JOIN guests ON luggages.guest_id = guests.id")
+
+
+
+
+```
+
