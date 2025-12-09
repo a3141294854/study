@@ -76,9 +76,27 @@ func CheckAction(name string) gin.HandlerFunc {
 		c.Next()
 	}
 }
+```
 
+## 关联表的增删改查
 
-
+```go
+// 为角色添加权限
+role := models.Role{ID: 1}
+permission := models.Permission{ID: 1}
+db.Model(&role).Association("Permissions").Append(&permission)
+// 从角色中移除权限
+db.Model(&role).Association("Permissions").Delete(&permission)
+// 替换角色的所有权限
+newPermissions := []models.Permission{permission1, permission2}
+db.Model(&role).Association("Permissions").Replace(newPermissions)
+// 清空角色的所有权限
+db.Model(&role).Association("Permissions").Clear()
+// 获取角色的权限数量
+count := db.Model(&role).Association("Permissions").Count()
+// 获取角色的所有权限
+var permissions []models.Permission
+db.Model(&role).Association("Permissions").Find(&permissions)
 
 
 
