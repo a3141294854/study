@@ -117,6 +117,16 @@ if err != nil {
 }
 ```
 
+```go
+tx := s.DB.Begin() //启动事务
+tx.Rollback() //回滚事务
+tx.Commit()  //提交事务
+
+
+```
+
+
+
 ## 其它
 
 ```go
