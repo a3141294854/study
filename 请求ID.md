@@ -31,6 +31,7 @@ func RequestIDMiddleware() gin.HandlerFunc {
 	}
 }
 
+// generateRequestID() 上面的id
 func generateRequestID() string {
 	// 生成UUID v4
 	return uuid.New().String()
@@ -44,13 +45,15 @@ func LogRequest() gin.HandlerFunc {
 		c.Next()
 
 		requestID, _ := c.Get("request_id")
-		logger.Logger.Info("请求处理完成",
-			"request_id", requestID,
-			"method", c.Request.Method,
-			"path", c.Request.URL.Path,
-			"status", c.Writer.Status(),
-			"duration", time.Since(start),
-		)
+		duration := time.Since(start)
+		logger.Logger.WithFields(logrus.Fields{
+			"request_id": requestID,
+			"method":     c.Request.Method,
+			"path":       c.Request.URL.Path,
+			"status":     c.Writer.Status(),
+			"duration":   duration.String(),
+		}).Info("请求处理完成")
+
 	}
 }
 ```
