@@ -35,7 +35,9 @@ func fun(c *gin.Context){
 
 常用于用户管理
 
-http://localhost:8000/user/name/action
+这里的用户根据实际情况变化
+
+http://localhost:8000/user/:name/action
 
 ```go
 r.GET("/aaa/:name/*action", fun())
@@ -137,6 +139,7 @@ type Login struct {
 var json Login
       // 将request的body中的数据，自动按照json格式解析到结构体
       //相应的还有ShouldBindForm 和万能但不安全的ShouldBind
+      //如果这里传的是接口，就不要&
       if err := c.ShouldBindJSON(&json); err != nil {
          // 返回错误信息
          // gin.H封装了生成json数据的工具

@@ -159,9 +159,23 @@ Preload("Guest")
 //差不多就是join
 //join
 Joins("JOIN guests ON luggages.guest_id = guests.id")
+```
 
+## 一对多关系
 
+外键总是在"多"的一方（Luggage），指向"一"的一方（Location
 
+```go
+Luggage []Luggage `json:"luggage,omitempty" gorm:"foreignKey:LocationID"`
 
+LuggageStorageID uint           `json:"luggage_storage_id"`
+LuggageStorage   LuggageStorage `json:"luggage_storage,omitempty" gorm:"foreignKey:LuggageStorageID"`
+
+```
+
+## 多对多关系
+
+```go
+Permissions []Permission `gorm:"many2many:role_permission"`
 ```
 

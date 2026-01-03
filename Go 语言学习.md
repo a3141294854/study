@@ -646,3 +646,13 @@ if err != nil {
 }
 ```
 
+## 反射
+
+```go
+	reqValue := reflect.ValueOf(model).Elem() //获取指针指向的值
+	fieldValue := reqValue.FieldByName(ty)    //根据字段名获取对应的值
+    reflect.ValueOf(req).Elem().FieldByName(v).IsZero() //是使用反射来检查结构体某个字段是否为零值的代码。
+    interface_id := reflect.ValueOf(req).Elem().FieldByName("ID").Interface()//这里返回的是value对象，要转换成interface对象
+    reflect.TypeOf()
+```
+
